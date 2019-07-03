@@ -1,5 +1,13 @@
 package com.github.sirlacky.BookLibraryApp;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class BookByCategory {
@@ -120,5 +128,105 @@ public class BookByCategory {
                 ", categories=" + categories +
                 '}';
     }
+    public static List<BookByCategory> getBookByCategorie(String categorie) {
 
+        List<BookByCategory> listOfBookSortedByCategory = new ArrayList<>();
+
+
+        try {
+
+            byte[] jsonData = Files.readAllBytes(Paths.get("C:\\Users\\SirLackyDom\\Desktop\\Projekty Programowanie\\BookLibraryApp\\src\\main\\resources\\JSON\\books.json"));
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode rootNode = null;
+            rootNode = objectMapper.readTree(jsonData);
+            Book book = new Book();
+            JsonNode items = rootNode.path("items");
+            Iterator<JsonNode> elements = items.elements();
+
+
+            while (elements.hasNext()) {
+                JsonNode nextElement = elements.next();
+                BookByCategory bookByCategory = new BookByCategory();
+                if (nextElement.has("volumeInfo")) {
+                    JsonNode volumeInfo = nextElement.path("volumeInfo");
+
+                    if (volumeInfo.has("categories")) {
+                        JsonNode categories = volumeInfo.path("categories");
+
+                        if (categories.toString().contains(categorie)) {
+
+
+                            if (volumeInfo.has("industryIdentifiers")) {
+                                JsonNode industryIdentifiers = volumeInfo.path("industryIdentifiers");
+                                bookByCategory.setIsbn(industryIdentifiers.findValue("identifier").asText());
+
+                            }
+                            if (volumeInfo.has("title")) {
+                                JsonNode title = volumeInfo.path("title");
+                                bookByCategory.setTitle(title.asText());
+                            }
+                            if (volumeInfo.has("publisher")) {
+                                JsonNode publisher = volumeInfo.path("publisher");
+                                bookByCategory.setPublisher(publisher.asText());
+                            }
+                            if (volumeInfo.has("publishedDate")) {
+                                JsonNode publishedDate = volumeInfo.path("publishedDate");
+                                bookByCategory.setPublishedDate(publishedDate.asInt());
+                            }
+                            if (volumeInfo.has("description")) {
+                                JsonNode description = volumeInfo.path("description");
+                                bookByCategory.setDescription(description.asText());
+                            }
+                            if (volumeInfo.has("pageCount")) {
+                                JsonNode pageCount = volumeInfo.path("pageCount");
+                                bookByCategory.setPageCount(pageCount.asInt());
+                            }
+                            if (volumeInfo.has("thumbnailUrl")) {
+                                JsonNode thumbnailUrl = volumeInfo.path("thumbnailUrl");
+                                bookByCategory.setThumbnailUrl(thumbnailUrl.asText());
+                            }
+                            if (volumeInfo.has("language")) {
+                                JsonNode language = volumeInfo.path("language");
+                                bookByCategory.setLanguage(language.asText());
+                            }
+                            if (volumeInfo.has("previewLink")) {
+                                JsonNode previewLink = volumeInfo.path("previewLink");
+                                bookByCategory.setPreviewLink(previewLink.asText());
+                            }
+                            if (volumeInfo.has("authors")) {
+                                JsonNode authors = volumeInfo.path("authors");
+
+                                if (authors.isArray()) {
+                                    List<String> authorsList = new ArrayList<>();
+                                    for (JsonNode node : authors) {
+                                        authorsList.add(node.asText());
+                                    }
+                                    bookByCategory.setAuthors(authorsList);
+                                }
+
+                            }
+                            if (volumeInfo.has("categories")) {
+                                JsonNode cat = volumeInfo.path("categories");
+
+                                if (cat.isArray()) {
+                                    List<String> catList = new ArrayList<>();
+                                    for (JsonNode node : cat) {
+                                        catList.add(node.asText());
+                                    }
+                                    bookByCategory.setCategories(catList);
+                                }
+
+                            }
+
+                            listOfBookSortedByCategory.add(bookByCategory);
+                        }
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Pasujące wpisy: " + listOfBookSortedByCategory.size());
+        return listOfBookSortedByCategory;
+    }
 }
