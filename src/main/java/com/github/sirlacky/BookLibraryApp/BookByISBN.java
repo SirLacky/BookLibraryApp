@@ -1,47 +1,29 @@
 package com.github.sirlacky.BookLibraryApp;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
 
-import java.util.Arrays;
+public class BookByISBN {
 
-
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class Book {
-
-    @JsonProperty("industryIdentifiers")
-    private String industryIdentifiers;
-    @JsonProperty("title")
+    private String isbn;
     private String title;
-    @JsonProperty("subtitle")
     private String subtitle;
-    @JsonProperty("publisher")
     private String publisher;
-    @JsonProperty("publishedDate")
-    private long publishedDate;
-    @JsonProperty("description")
+    private int publishedDate;
     private String description;
-    @JsonProperty("pageCount")
     private int pageCount;
-    @JsonProperty("thumbnailUrl")
     private String thumbnailUrl;
-    @JsonProperty("language")
     private String language;
-    @JsonProperty("previewLink")
     private String previewLink;
-    @JsonProperty("averageRating")
     private double averageRating;
-    @JsonProperty("authors")
-    private String[] authors;
-    @JsonProperty("categories")
-    private String[] categories;
+    private List<String> authors;
+    private List<String> categories;
 
-    public String getIndustryIdentifiers() {
-        return industryIdentifiers;
+    public String getIsbn() {
+        return isbn;
     }
 
-    public void setIndustryIdentifiers(String industryIdentifiers) {
-        this.industryIdentifiers = industryIdentifiers;
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
     }
 
     public String getTitle() {
@@ -68,11 +50,11 @@ public class Book {
         this.publisher = publisher;
     }
 
-    public long getPublishedDate() {
+    public int getPublishedDate() {
         return publishedDate;
     }
 
-    public void setPublishedDate(long publishedDate) {
+    public void setPublishedDate(int publishedDate) {
         this.publishedDate = publishedDate;
     }
 
@@ -124,26 +106,26 @@ public class Book {
         this.averageRating = averageRating;
     }
 
-    public String[] getAuthors() {
+    public List<String> getAuthors() {
         return authors;
     }
 
-    public void setAuthors(String[] authors) {
+    public void setAuthors(List<String> authors) {
         this.authors = authors;
     }
 
-    public String[] getCategories() {
+    public List<String> getCategories() {
         return categories;
     }
 
-    public void setCategories(String[] categories) {
+    public void setCategories(List<String> categories) {
         this.categories = categories;
     }
 
     @Override
     public String toString() {
-        return "Book{" +
-                "industryIdentifiers='" + industryIdentifiers + '\'' +
+        return "BookByISBN{" +
+                "isbn='" + isbn + '\'' +
                 ", title='" + title + '\'' +
                 ", subtitle='" + subtitle + '\'' +
                 ", publisher='" + publisher + '\'' +
@@ -154,10 +136,9 @@ public class Book {
                 ", language='" + language + '\'' +
                 ", previewLink='" + previewLink + '\'' +
                 ", averageRating=" + averageRating +
-                ", authors=" + Arrays.toString(authors) +
-                ", categories=" + Arrays.toString(categories) +
+                ", authors=" + authors +
+                ", categories=" + categories +
                 '}';
     }
 
-
-}
+    }
