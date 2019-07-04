@@ -3,12 +3,14 @@ package com.github.sirlacky.BookLibraryApp;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class BookByISBN {
 
@@ -148,12 +150,19 @@ public class BookByISBN {
                 ", categories=" + categories +
                 '}';
     }
+
     public static BookByISBN getBookByISBN(String isbn) {
         BookByISBN bookByISBN = new BookByISBN();
+        Logger logger = Logger.getLogger(BookByISBN.class.getName());
 
         try {
+            String filename = "\\src\\main\\resources\\JSON\\books.json";
+            String workingDirectory = System.getProperty("user.dir");
+            String absoluteFilePath = "";
+            absoluteFilePath = workingDirectory + File.separator + filename;
+            File file = new File(absoluteFilePath);
 
-            byte[] jsonData = Files.readAllBytes(Paths.get("C:\\Users\\SirLackyDom\\Desktop\\Projekty Programowanie\\BookLibraryApp\\src\\main\\resources\\JSON\\books.json"));
+            byte[] jsonData = Files.readAllBytes(Paths.get(absoluteFilePath));
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode rootNode = null;
             rootNode = objectMapper.readTree(jsonData);
@@ -240,7 +249,7 @@ public class BookByISBN {
                     }
                 }
             }
-
+            logger.info("Found result for ISBN: " + isbn);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -249,4 +258,4 @@ public class BookByISBN {
 
         return bookByISBN;
     }
-    }
+}

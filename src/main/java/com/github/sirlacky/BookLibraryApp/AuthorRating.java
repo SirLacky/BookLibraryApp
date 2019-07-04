@@ -3,10 +3,12 @@ package com.github.sirlacky.BookLibraryApp;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Iterator;
+import java.util.logging.Logger;
 
 public class AuthorRating {
 
@@ -39,11 +41,18 @@ public class AuthorRating {
 
     public static AuthorRating getRatingByAuthor(String authorName) {
 
+        Logger logger = Logger.getLogger(AuthorRating.class.getName());
+
         double finalRating = 0;
 
         try {
+            String filename = "\\src\\main\\resources\\JSON\\books.json";
+            String workingDirectory = System.getProperty("user.dir");
+            String absoluteFilePath = "";
+            absoluteFilePath = workingDirectory + File.separator + filename;
+            File file = new File(absoluteFilePath);
 
-            byte[] jsonData = Files.readAllBytes(Paths.get("C:\\Users\\SirLackyDom\\Desktop\\Projekty Programowanie\\BookLibraryApp\\src\\main\\resources\\JSON\\books.json"));
+            byte[] jsonData = Files.readAllBytes(Paths.get(absoluteFilePath));
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode rootNode = null;
             rootNode = objectMapper.readTree(jsonData);
@@ -53,7 +62,6 @@ public class AuthorRating {
 
             int i = 0;
             double rating = 0;
-
 
 
             while (elements.hasNext()) {
@@ -69,7 +77,7 @@ public class AuthorRating {
                             if (averageRating.isDouble()) {
                                 rating += averageRating.asDouble();
                                 i++;
-                                System.out.println("Znaleziono wyszukań: "+i);
+                                logger.info("Number of ratings found: " + i);
                             }
                         }
                     }
@@ -77,9 +85,7 @@ public class AuthorRating {
             }
 
             finalRating = rating / i;
-            System.out.println("Dla autora: "+authorName);
-            System.out.println("Srednia ocena wynosi: "+Math.round(finalRating));
-
+            logger.info("For author: " + authorName + " average rating is: " + Math.round(finalRating));
 
 
         } catch (IOException e) {
