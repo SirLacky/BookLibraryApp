@@ -3,12 +3,14 @@ package com.github.sirlacky.BookLibraryApp;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class BookByCategory {
 
@@ -112,6 +114,7 @@ public class BookByCategory {
         this.categories = categories;
     }
 
+
     @Override
     public String toString() {
         return "BookByCategory{" +
@@ -128,14 +131,21 @@ public class BookByCategory {
                 ", categories=" + categories +
                 '}';
     }
+
     public static List<BookByCategory> getBookByCategorie(String categorie) {
 
         List<BookByCategory> listOfBookSortedByCategory = new ArrayList<>();
 
-
+        Logger logger = Logger.getLogger(BookByCategory.class.getName());
         try {
 
-            byte[] jsonData = Files.readAllBytes(Paths.get("C:\\Users\\SirLackyDom\\Desktop\\Projekty Programowanie\\BookLibraryApp\\src\\main\\resources\\JSON\\books.json"));
+            String filename = "\\src\\main\\resources\\JSON\\books.json";
+            String workingDirectory = System.getProperty("user.dir");
+            String absoluteFilePath = "";
+            absoluteFilePath = workingDirectory + File.separator + filename;
+            File file = new File(absoluteFilePath);
+
+            byte[] jsonData = Files.readAllBytes(Paths.get(absoluteFilePath));
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode rootNode = null;
             rootNode = objectMapper.readTree(jsonData);
@@ -226,7 +236,7 @@ public class BookByCategory {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("Pasujące wpisy: " + listOfBookSortedByCategory.size());
+        logger.info("For category: " + categorie + " found entries: " + listOfBookSortedByCategory.size());
         return listOfBookSortedByCategory;
     }
 }
